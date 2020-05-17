@@ -1,19 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/background"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView_hello"
+        android:id="@+id/current_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="09:42"
+        android:gravity="center_horizontal"
+        android:textSize="50sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/current_date"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:text="5月7日 星期四"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="15dp"
+        android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/english_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="abandon"
+            android:textColor="@android:color/white"
+            android:textSize="50dp"
+            android:layout_marginTop="50dp"/>
+    <TextView
+        android:id="@+id/yinbiao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="[əˈbændən]"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+
+    <!--RadioGroup用于选项布局-->
+    <RadioGroup
+        android:id="@+id/options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <RadioButton
+            android:id="@+id/option1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="A:抛弃、放弃"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:button="@null"
+            android:layout_marginTop="20dp"
+            />
+
+        <RadioButton
+            android:id="@+id/option2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="B:边界"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:button="@null"
+            android:layout_marginTop="20dp"
+            />
+
+        <RadioButton
+            android:id="@+id/option3"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="C:木板"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:button="@null"
+            android:layout_marginTop="20dp"
+            />
+    </RadioGroup>
+
+
+</LinearLayout>
