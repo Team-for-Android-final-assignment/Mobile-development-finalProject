@@ -1,14 +1,20 @@
 package com.team.weup;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -36,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         initView();
+        requestPermissions();
     }
 
     private void init(){
@@ -70,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         mFragments = new ArrayList<>(4);
         mFragments.add(BlankFragment.newInstance("生活",""));
         mFragments.add(reviewFragment);
-        mFragments.add(BlankFragment.newInstance("运动",""));
+        mFragments.add(new SportsFragment());
         mFragments.add(BlankFragment.newInstance("我的",""));
         // init view pager
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
@@ -141,8 +148,34 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
     }
 
+    private void requestPermissions() {
+        // 申请权限：
+        String[] neededPermissions = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        };
+        List<String> tempPermissions = new ArrayList<>();
+        for (String p : neededPermissions) {
+            if (ContextCompat.checkSelfPermission(this, p) != PackageManager.PERMISSION_GRANTED) {
+                tempPermissions.add(p);
+            }
+        }
+        if (!tempPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(this, tempPermissions.toArray(new String[0]), 100);
+        }
+    }
 
-
-
+    // 需要重载回调函数：用户对权限申请做出相应操作后执行
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "权限被拒绝：" + permissions[i], Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 }
 
