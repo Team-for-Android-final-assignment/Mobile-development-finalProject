@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.RadioButton;
@@ -13,7 +14,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.team.weup.model.User;
+import com.team.weup.model.Word;
+import com.team.weup.repo.UserInterface;
+import com.team.weup.repo.WordInterface;
+import com.team.weup.util.NetworkUtil;
+import com.team.weup.util.ReturnVO;
+
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
     //月、日、星期
@@ -37,6 +49,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     private KeyguardManager km;
     private KeyguardManager.KeyguardLock kl;
+
+    private String chinese="";
+    private int progress=0;
+
+    private User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +129,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         current_time.setText(hour+":"+minute);
         current_date.setText(month+"月"+day+"日"+"    "+"星期"+weekStr);
+
+        getDBData();
+        //设置屏幕上单词的显示
+
     }
 
     //用来记录和标记错题
@@ -121,10 +143,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     //该函数用于实现当用户选择词义时，判断选择是否正确,并产生相应的动态效果
     private void btnGetText(String msg, RadioButton btn){
         setWordColor();
-        if(msg.equals("抛弃、放弃")){
+        if(msg.equals(chinese)){
             english_word.setTextColor(Color.GREEN);
             yinbiao.setTextColor(Color.GREEN);
             btn.setTextColor(Color.GREEN);
+            //选对了就解锁
+            unlock();
+            startActivity(new Intent(MainActivity.this,HomeActivity.class));
         }
         else{
 
@@ -147,9 +172,6 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             case R.id.option1:
                 String msg1 = option1.getText().toString().substring(2);
                 btnGetText(msg1,option1);
-                //选对了就解锁
-                //unlock();
-                startActivity(new Intent(MainActivity.this,HomeActivity.class));
                 break;
             case R.id.option2:
                 String msg2 = option2.getText().toString().substring(2);
@@ -191,6 +213,64 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         return super.onTouchEvent(event);
     }
 
+    private void getDBData(){
+        //从数据库中读取当前的进度
+        NetworkUtil.getRetrofit().create(UserInterface.class)
+                .getUserById((long)1)
+                .enqueue(new Callback<ReturnVO<User>>() {
+                    @Override
+                    public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
+                        ReturnVO<User> body = response.body();
+                        progress = body.getData().getProgress();
+                        currentUser = new User(body.getData());
+                        if(currentUser == null){
+                            Log.i("TEST","Hello");
+                        }
+                        Log.i("TEST","1:"+String.valueOf(progress));
+                        //根据当前进度读取下一个单词
+                        //第二层开始
+                        NetworkUtil.getRetrofit().create(WordInterface.class)
+                                .getWordById((long) progress)
+                                .enqueue(new Callback<ReturnVO<Word>>() {
+                                    @Override
+                                    public void onResponse(Call<ReturnVO<Word>> call, Response<ReturnVO<Word>> response) {
+                                        ReturnVO<Word> body = response.body();
+                                        Log.i("TEST","2:"+String.valueOf(progress));
+                                        english_word.setText(body.getData().getEnglish());
+                                        yinbiao.setText(body.getData().getYinbiao());
+                                        option1.setText("A:"+body.getData().getOption1());
+                                        option2.setText("B:"+body.getData().getOption2());
+                                        option3.setText("C:"+body.getData().getOption3());
+                                        chinese = body.getData().getChinese();
+                                        Log.i("TEST",chinese);
+                                        //进度++
+                                        progress++;
+                                        Log.i("TEST","3:"+String.valueOf(progress));
+                                        //修改进度
+                                        if(currentUser == null){
+                                            Log.i("TEST","user object is null");
+                                        }
+                                        else{
+                                            currentUser.setProgress(progress);
+                                        }
+                                        //返回新的对象
+                                        NetworkUtil.getRetrofit().create(UserInterface.class)
+                                                .updateUser((long)1,currentUser);
+                                    }
+                                    @Override
+                                    public void onFailure(Call<ReturnVO<Word>> call, Throwable t) {
+
+                                    }
+                                });
+                        //第二层结束
+
+                    }
+                    @Override
+                    public void onFailure(Call<ReturnVO<User>> call, Throwable t) {
+
+                    }
+                });
+    }
 
 
 
