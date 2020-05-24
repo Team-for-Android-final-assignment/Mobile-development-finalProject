@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -26,10 +27,13 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener,ReviewFragment.OnFragmentInteractionListener{
 
     private ViewPager mViewPager;
-    private RadioGroup mTabRadioGroup;
+    //private RadioGroup mTabRadioGroup;
     private List<Fragment> mFragments;
     private FragmentPagerAdapter mAdapter;
     private ReviewFragment reviewFragment;
+
+    //底边栏
+    private BottomFragment bottomFragment;
 
     //存储功能开启设置
     private SharedPreferences sharedPreferences;
@@ -39,7 +43,6 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         initView();
         requestPermissions();
@@ -70,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
     private void initView(){
         mViewPager = (ViewPager)findViewById(R.id.fragment_vp);
-        mTabRadioGroup = (RadioGroup) findViewById(R.id.tabs_rg);
+        //mTabRadioGroup = (RadioGroup) findViewById(R.id.tabs_rg);
         reviewFragment = new ReviewFragment();
         // init fragment
         //将这里的fragment修改成你自己的页面
@@ -78,19 +81,22 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         mFragments.add(BlankFragment.newInstance("生活",""));
         mFragments.add(reviewFragment);
         mFragments.add(new SportsFragment());
-        mFragments.add(BlankFragment.newInstance("我的",""));
+        mFragments.add(new IFragment());
         // init view pager
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
         mViewPager.setAdapter(mAdapter);
         // register listener
         mViewPager.addOnPageChangeListener(mPageChangeListener);
-        mTabRadioGroup.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        //mTabRadioGroup.setOnCheckedChangeListener(mOnCheckedChangeListener);
+
+        //底边栏
+        bottomFragment = new BottomFragment();
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        screenListener.unregisterListener();
+        //screenListener.unregisterListener();
         mViewPager.removeOnPageChangeListener(mPageChangeListener);
     }
 
@@ -103,8 +109,11 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
         @Override
         public void onPageSelected(int i) {
+            /*
             RadioButton radioButton = (RadioButton) mTabRadioGroup.getChildAt(i);
             radioButton.setChecked(true);
+             */
+            bottomFragment.UIMotify(i, HomeActivity.this);
         }
 
         @Override
@@ -113,6 +122,12 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         }
     };
 
+    // 变更vpViewPager显示内容
+    public void changePager(int i){
+        mViewPager.setCurrentItem(i);
+    }
+
+    /*
     private RadioGroup.OnCheckedChangeListener mOnCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -124,6 +139,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
             }
         }
     };
+     */
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> mList;

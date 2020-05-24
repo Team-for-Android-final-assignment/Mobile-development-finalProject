@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/i_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginHorizontal="20dp">
+
+            <!-- 头像和id -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="30dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+
+                <com.gcssloop.widget.RCRelativeLayout
+                    style="@style/i_main1_img"
+                    app:round_corner="50dp"
+                    app:round_as_circle="true">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/svg_ic_default_head"
+                        android:id="@+id/head_img"/>
+                </com.gcssloop.widget.RCRelativeLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp">
+
+                    <TextView
+                        style="@style/i_main1_h1"
+                        android:id="@+id/i_main_h1"
+                        android:text="@string/i_name"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"/>
+                    <TextView
+                        style="@style/i_main1_h2"
+                        android:id="@+id/i_main_h2"
+                        android:text="@string/i_accounts"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/i_main_h1"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <!-- 菜单选项 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 上传头像 -->
+                <LinearLayout
+                    style="@style/i_main2_item"
+                    android:id="@+id/upload_head">
+                    <ImageView
+                        style="@style/i_main2_img"
+                        android:src="@drawable/svg_ic_upload_head"/>
+                    <TextView
+                        style="@style/i_main2_text"
+                        android:text="@string/upload_head"/>
+                </LinearLayout>
+
+                <!-- 修改密码 -->
+                <LinearLayout
+                    style="@style/i_main2_item"
+                    android:id="@+id/update_password">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp">
+                        <ImageView
+                            style="@style/i_main2_img"
+                            android:src="@drawable/svg_ic_update_password"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        style="@style/i_main2_text"
+                        android:text="@string/update_password"/>
+                </LinearLayout>
+
+                <!-- 登出 -->
+                <LinearLayout
+                    style="@style/i_main2_item"
+                    android:background="@drawable/bg_bottom_item_border_4"
+                    android:id="@+id/login_out">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp">
+                        <ImageView
+                            style="@style/i_main2_img"
+                            android:src="@drawable/svg_ic_login_out"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        style="@style/i_main2_text"
+                        android:text="@string/login_out"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

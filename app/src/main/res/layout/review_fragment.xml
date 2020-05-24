@@ -8,7 +8,7 @@
         android:layout_width="301dp"
         android:layout_height="301dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="150dp">
+        android:layout_marginTop="100dp">
 
         <!--竖分割线-->
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="150dp"
             android:layout_above="@id/horizon"
             android:layout_toLeftOf="@id/vertical"
-            app:cardBackgroundColor="@color/myBlue">
+            app:cardBackgroundColor="@color/qidao_blue">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_height="150dp"
             android:layout_above="@id/horizon"
             android:layout_toRightOf="@id/vertical"
-            app:cardBackgroundColor="@color/myYellow">
+            app:cardBackgroundColor="@color/yian_yellow">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_height="150dp"
             android:layout_below="@id/horizon"
             android:layout_toLeftOf="@id/vertical"
-            app:cardBackgroundColor="@color/myYellow">
+            app:cardBackgroundColor="@color/yian_yellow">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
             android:layout_height="150dp"
             android:layout_below="@id/horizon"
             android:layout_toRightOf="@id/vertical"
-            app:cardBackgroundColor="@color/myBlue">
+            app:cardBackgroundColor="@color/qidao_blue">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
