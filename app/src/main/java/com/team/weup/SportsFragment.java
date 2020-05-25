@@ -54,7 +54,8 @@ public class SportsFragment extends Fragment {
     }
 
     private void upload(View view) {
-        Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        //Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent chooseFile = new Intent(Intent.ACTION_PICK);
         chooseFile.setType("image/*");
         Intent intent = Intent.createChooser(chooseFile, "选择图片");
         startActivityForResult(intent, ACTIVITY_CHOOSE_FILE);

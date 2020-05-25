@@ -1,4 +1,30 @@
 <resources>
     <string name="app_name">We Up</string>
+
     <string name="上传图片">上传图片</string>
+
+
+    <string name="account">学号</string>
+    <string name="password">密码</string>
+    <string name="login_in">登&#8194;&#8194;录</string>
+
+    <string name="life">生活</string>
+    <string name="study">学习</string>
+    <string name="sport">运动</string>
+    <string name="i">我的</string>
+
+    <string name="i_name">姓名姓</string>
+    <string name="i_accounts">0000000000</string>
+    <string name="upload_head">上传头像</string>
+    <string name="update_password">修改密码</string>
+    <string name="login_out">退出登录</string>
+
+    <string name="go_back">返回</string>
+
+    <string name="old_password">请输入旧密码</string>
+    <string name="new_password">请输入新密码</string>
+    <string name="con_password">再次确认新密码</string>
+    <string name="confirm">确&#8194;&#8194;定</string>
+
+
 </resources>

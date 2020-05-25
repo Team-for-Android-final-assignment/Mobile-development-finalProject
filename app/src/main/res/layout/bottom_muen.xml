@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_life">
+
+        <ImageView
+            android:id="@+id/bottom_life_img"
+            style="@style/bottom_img"
+            android:src="@drawable/svg_ic_life_out"/>
+
+        <TextView
+            android:id="@+id/bottom_life_text"
+            style="@style/bottom_text"
+            android:text="@string/life" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_study">
+
+        <ImageView
+            android:id="@+id/bottom_study_img"
+            style="@style/bottom_img"
+            android:src="@drawable/svg_ic_study_out"/>
+
+        <TextView
+            android:id="@+id/bottom_study_text"
+            style="@style/bottom_text"
+            android:text="@string/study" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_sport">
+
+        <ImageView
+            android:id="@+id/bottom_sport_img"
+            style="@style/bottom_img"
+            android:src="@drawable/svg_ic_sport_out" />
+
+        <TextView
+            android:id="@+id/bottom_sport_text"
+            style="@style/bottom_text"
+            android:text="@string/sport" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/bottom_item"
+        android:id="@+id/bottom_i"
+        android:background="@drawable/bg_bottom_item_border_2">
+
+        <ImageView
+            android:id="@+id/bottom_i_img"
+            style="@style/bottom_img"
+            android:src="@drawable/svg_ic_i_out"/>
+
+        <TextView
+            android:id="@+id/bottom_i_text"
+            style="@style/bottom_text"
+            android:text="@string/i" />
+
+    </LinearLayout>
+
+</LinearLayout>
