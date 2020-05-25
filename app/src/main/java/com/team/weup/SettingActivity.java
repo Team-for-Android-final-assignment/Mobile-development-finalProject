@@ -23,6 +23,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        //初始化share数据库
         sharedPreferences = this.getSharedPreferences("share", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -38,6 +39,7 @@ public class SettingActivity extends AppCompatActivity {
         //setSpinnerItemSelectedByValue(spinnerDifficulty,"四级");
 
 
+        //设置开关事件：包括显示事件和数据事件
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,14 +48,28 @@ public class SettingActivity extends AppCompatActivity {
                         //如果开关处于打开状态
                         if(switchButton.isSwitchOpen()){
                             switchButton.closeSwitch();
+                            editor.putBoolean("btnTf",false);
                         }
                         //开关关闭
                         else{
                             switchButton.openSwitch();
+                            editor.putBoolean("btnTf",true);
                         }
+                        editor.commit();
                         break;
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        if(sharedPreferences.getBoolean("btnTf",false)){
+            switchButton.openSwitch();
+        }
+        else{
+            switchButton.closeSwitch();
+        }
     }
 }

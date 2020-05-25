@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         km = (KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE);
         kl = km.newKeyguardLock("unlock");
+
+        hideBottomUIMenu();
     }
 
     @Override
@@ -130,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         current_time.setText(hour+":"+minute);
         current_date.setText(month+"月"+day+"日"+"    "+"星期"+weekStr);
 
+        BaseApplication.addDestroyActivity(this,"mainActivity");
         getDBData();
         //设置屏幕上单词的显示
 
@@ -147,9 +151,34 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             english_word.setTextColor(Color.GREEN);
             yinbiao.setTextColor(Color.GREEN);
             btn.setTextColor(Color.GREEN);
+
+            //进度++
+            progress++;
+            Log.i("TEST","3:"+String.valueOf(progress));
+            //修改进度
+            if(currentUser == null){
+                Log.i("TEST","user object is null");
+            }
+            else{
+                currentUser.setProgress(progress);
+            }
+            //返回新的对象
+            NetworkUtil.getRetrofit().create(UserInterface.class)
+                    .updateUser((long)1,currentUser)
+                    .enqueue(new Callback<ReturnVO<User>>() {
+                        @Override
+                        public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<ReturnVO<User>> call, Throwable t) {
+
+                        }
+                    });
             //选对了就解锁
             unlock();
-            startActivity(new Intent(MainActivity.this,HomeActivity.class));
+            //startActivity(new Intent(MainActivity.this,HomeActivity.class));
         }
         else{
 
@@ -198,10 +227,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     //解锁动作函数
     private void unlock(){
+        Log.i("TEST","test6");
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+        //这句话是用来隐藏锁屏界面的
         kl.disableKeyguard();
         finish();
     }
@@ -230,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                         //根据当前进度读取下一个单词
                         //第二层开始
                         NetworkUtil.getRetrofit().create(WordInterface.class)
-                                .getWordById((long) progress)
+                                .getWordById((long) (progress%6+1))
                                 .enqueue(new Callback<ReturnVO<Word>>() {
                                     @Override
                                     public void onResponse(Call<ReturnVO<Word>> call, Response<ReturnVO<Word>> response) {
@@ -243,19 +274,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                                         option3.setText("C:"+body.getData().getOption3());
                                         chinese = body.getData().getChinese();
                                         Log.i("TEST",chinese);
-                                        //进度++
-                                        progress++;
-                                        Log.i("TEST","3:"+String.valueOf(progress));
-                                        //修改进度
-                                        if(currentUser == null){
-                                            Log.i("TEST","user object is null");
-                                        }
-                                        else{
-                                            currentUser.setProgress(progress);
-                                        }
-                                        //返回新的对象
-                                        NetworkUtil.getRetrofit().create(UserInterface.class)
-                                                .updateUser((long)1,currentUser);
+
                                     }
                                     @Override
                                     public void onFailure(Call<ReturnVO<Word>> call, Throwable t) {
@@ -270,6 +289,30 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
                     }
                 });
+    }
+
+    protected void hideBottomUIMenu() {
+    //隐藏底部导航栏
+        final View decorView = getWindow().getDecorView();
+        final int  uiOption = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                |View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                |View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                |View.SYSTEM_UI_FLAG_IMMERSIVE
+                |View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+
+        decorView.setSystemUiVisibility(uiOption);
+
+        // This code will always hide the navigation bar
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener(){
+            @Override
+            public void  onSystemUiVisibilityChange(int visibility)
+            {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+                {
+                    decorView.setSystemUiVisibility(uiOption);
+                }
+            }
+        });
     }
 
 
