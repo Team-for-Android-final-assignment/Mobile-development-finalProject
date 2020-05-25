@@ -3,6 +3,7 @@ package com.team.weup;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +56,11 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private int progress=0;
 
     private User currentUser;
+    private SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor = null;
+
+    //用来统计当前答对的题数
+    private int count=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         setContentView(R.layout.activity_main);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        sharedPreferences = getSharedPreferences("share",Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         current_time = (TextView)findViewById(R.id.current_time);
         current_date = (TextView)findViewById(R.id.current_date);
@@ -139,6 +148,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     }
 
+    private void getNextData(){
+        //解锁的标准
+        int require = sharedPreferences.getInt("allNum",2);
+
+    }
+
     //用来记录和标记错题
     private void saveWrongData(){
 
@@ -152,8 +167,12 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             yinbiao.setTextColor(Color.GREEN);
             btn.setTextColor(Color.GREEN);
 
+            //这里判断一下答对的题目数，够数了就解锁，不够下一个。答错题了也应该换下一个，同时题目存储到错题本上
+
             //进度++
             progress++;
+            //对题数++
+            count++;
             Log.i("TEST","3:"+String.valueOf(progress));
             //修改进度
             if(currentUser == null){
@@ -168,7 +187,18 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     .enqueue(new Callback<ReturnVO<User>>() {
                         @Override
                         public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
-
+                            //选对了就解锁
+                            //getInt的第二个参数是不存在这个键时，返回的缺省值
+                            if(count == sharedPreferences.getInt("allNum",2)){
+                                unlock();
+                            }
+                            else{
+                                //没有到数的话就渲染下一个词
+                                Log.i("TEST","test8");
+                                //progress还是5？？
+                                getDBData();
+                                setWordColor();
+                            }
                         }
 
                         @Override
@@ -176,8 +206,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
                         }
                     });
-            //选对了就解锁
-            unlock();
+
             //startActivity(new Intent(MainActivity.this,HomeActivity.class));
         }
         else{
