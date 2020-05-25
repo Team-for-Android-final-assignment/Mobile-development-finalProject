@@ -32,7 +32,8 @@
                 <com.gcssloop.widget.RCRelativeLayout
                     style="@style/i_main1_img"
                     app:round_corner="50dp"
-                    app:round_as_circle="true">
+                    app:round_as_circle="true"
+                    android:background="@drawable/bg_i_img_round_border">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

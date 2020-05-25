@@ -9,19 +9,39 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Base64;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.team.weup.model.User;
+import com.team.weup.repo.UserInterface;
+import com.team.weup.util.NetworkUtil;
+import com.team.weup.util.ReturnVO;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 //这个类用于记录系统状态
 public final class SystemStatus {
     //当前登录者帐号（学号）
-    private static String now_accounts = null;
+    private static String now_account = null;
     //当前登陆者名字
     private static String now_name = null;
     //当前登陆者头像
@@ -62,9 +82,10 @@ public final class SystemStatus {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, MODE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        editor.putString("now_account", now_account);
         editor.putBoolean("islogin", islogin);
         editor.putString("now_name", now_name);
-        editor.putString("now_accounts", now_accounts);
+
         //转码图片
         if (userhead != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -83,7 +104,7 @@ public final class SystemStatus {
         islogin = sharedPreferences.getBoolean("islogin", false);
 
         if (islogin) {
-            now_accounts = sharedPreferences.getString("now_accounts", null);
+            now_account = sharedPreferences.getString("now_account", null);
             now_name = sharedPreferences.getString("now_name", null);
             String source = sharedPreferences.getString("head", null);
             //解码图片
@@ -95,14 +116,50 @@ public final class SystemStatus {
         }
     }
 
-    //getter && setter
+    //从云上下载图片
+    private static Bitmap downHead = null;
+    public static Bitmap downloadHeadFromCloud(String imgPath) {
+        try {
 
-    public static void setNow_accounts(String accounts) {
-        now_accounts = accounts;
+            downHead = null;
+            String imgUrl = "http://123.56.85.195/upload/" + imgPath;
+            HttpClient client = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(imgUrl);
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        HttpResponse response = client.execute(httpGet);
+                        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                            InputStream input = response.getEntity().getContent();
+                            downHead = BitmapFactory.decodeStream(input);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        client.getConnectionManager().shutdown();
+                    }
+                }
+            });
+            thread.start();
+            thread.join();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            return downHead;
+        }
     }
 
-    public static String getNow_accounts() {
-        return now_accounts;
+
+    //getter && setter
+
+    public static void setNow_account(String accounts) {
+        now_account = accounts;
+    }
+
+    public static String getNow_account() {
+        return now_account;
     }
 
     public static void setNow_name(String name) {
