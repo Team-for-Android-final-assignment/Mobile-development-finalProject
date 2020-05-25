@@ -2,10 +2,12 @@ package com.team.weup;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -43,30 +45,50 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.activity_home);
         initView();
         requestPermissions();
+        init();
     }
 
     private void init(){
+        //初始化share数据库
         sharedPreferences = getSharedPreferences("share", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
         //设置屏幕监听,用来监听用户的解锁动作
         screenListener = new ScreenListener(this);
         screenListener.begin(new ScreenListener.ScreenStateListener() {
             @Override
-            public void onScreenOn() {
-
+            public void onScreenOn() {//手机点亮屏幕时的动作
+                //如果打开了开关
+                Log.i("TEST","test1");
+                if(sharedPreferences.getBoolean("btnTf",false)){
+                    //如果屏幕解锁
+                    Log.i("TEST","test2");
+                    if(sharedPreferences.getBoolean("tf",false)){
+                        Log.i("TEST","test3");
+                        startActivity(new Intent(HomeActivity.this,MainActivity.class));
+                        overridePendingTransition(0, 0);
+                    }
+                }
             }
 
             @Override
-            public void onScreenOff() {
-
+            public void onScreenOff() {//手机已锁屏时的操作
+                Log.i("TEST","test4");
+                editor.putBoolean("tf",true);
+                editor.commit();
+                BaseApplication.destroyActivity("mainActivity");
+                overridePendingTransition(0, 0);
             }
 
             @Override
-            public void onUserPresent() {
-
+            public void onUserPresent() {//手机已解锁时的操作
+                Log.i("TEST","test5");
+                editor.putBoolean("tf",false);
+                editor.commit();
             }
         });
     }
@@ -97,6 +119,8 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     protected void onDestroy(){
         super.onDestroy();
         //screenListener.unregisterListener();
+        Log.i("TEST","test7");
+        screenListener.unregisterListener();
         mViewPager.removeOnPageChangeListener(mPageChangeListener);
     }
 

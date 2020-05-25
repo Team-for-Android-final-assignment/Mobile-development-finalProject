@@ -28,4 +28,7 @@ public interface UserInterface {
 
     @GET("/user/{id}")
     Call<ReturnVO<User>> getUser(@Path("id") Long id);
+
+    @GET("/user/{id}")
+    Call<ReturnVO<User>> getUserById(@Path("id") Long id);
 }

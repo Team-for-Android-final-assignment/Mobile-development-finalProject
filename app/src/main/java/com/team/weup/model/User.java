@@ -41,6 +41,20 @@ public class User {
     @JsonIgnore
     private List<TodoItem> todoItemList;
 
+    public User(){
+
+    }
+
+    //写一个拷贝构造函数
+    public User(User user){
+        this.id = user.getId();
+        this.password = user.getPassword();
+        this.profilePhoto = user.getProfilePhoto();
+        this.progress = user.getProgress();
+        this.stepCount = user.getStepCount();
+        this.username = user.getUsername();
+    }
+
     public Long getId() {
         return id;
     }

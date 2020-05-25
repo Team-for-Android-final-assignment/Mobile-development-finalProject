@@ -30,6 +30,7 @@
             android:layout_weight="1"
             android:id="@+id/life_tab"
             android:button="@null"
+            android:checked="false"
             android:drawableTop="@drawable/life"
             android:gravity="center_horizontal"
             android:text="生活" />
@@ -42,6 +43,7 @@
             android:drawableTop="@drawable/study"
             android:button="@null"
             android:gravity="center_horizontal"
+            android:checked="true"
             android:text="学习" />
 
         <RadioButton
@@ -51,6 +53,7 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/sport"
             android:button="@null"
+            android:checked="false"
             android:gravity="center_horizontal"
             android:text="运动" />
 
@@ -61,6 +64,7 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/me"
             android:button="@null"
+            android:checked="false"
             android:gravity="center_horizontal"
             android:text="我的" />
     </RadioGroup>
