@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.RadioButton;
@@ -12,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -36,6 +38,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     //屏幕监听
     private ScreenListener screenListener;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,11 +151,13 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void requestPermissions() {
         // 申请权限：
         String[] neededPermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACTIVITY_RECOGNITION,
         };
         List<String> tempPermissions = new ArrayList<>();
         for (String p : neededPermissions) {

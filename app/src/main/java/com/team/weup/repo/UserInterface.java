@@ -3,9 +3,12 @@ package com.team.weup.repo;
 import com.team.weup.model.User;
 import com.team.weup.util.ReturnVO;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -23,4 +26,10 @@ public interface UserInterface {
     @Multipart
     @POST("upload")
     Call<ReturnVO<String>> upload(@Part MultipartBody.Part file);
+
+    @GET("user/{id}")
+    Call<ReturnVO<User>> getUserById(@Path("id") Long userId);
+
+    @GET("users/getTopStepCountList")
+    Call<ReturnVO<List<User>>> getTopListByStepCount();
 }

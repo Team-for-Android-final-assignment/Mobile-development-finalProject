@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">We Up</string>
     <string name="上传图片">上传图片</string>
+    <string name="今日步数">今日步数</string>
+    <string name="今日目标">今日目标：</string>
+    <string name="排行榜">排行榜</string>
 </resources>
