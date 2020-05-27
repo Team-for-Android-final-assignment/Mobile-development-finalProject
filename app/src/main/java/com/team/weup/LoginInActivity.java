@@ -36,6 +36,10 @@ public class LoginInActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(SystemStatus.isLogin()){
+            startActivity(new Intent(this, HomeActivity.class));
+            finish();
+        }
         setContentView(R.layout.login_in_layout);
 
         //登记监听器
@@ -101,7 +105,7 @@ public class LoginInActivity extends AppCompatActivity {
                                     } else SystemStatus.setUserhead(null);
                                     SystemStatus.SaveSetting(LoginInActivity.this);
 
-                                    startActivity(new Intent(LoginInActivity.this, MainActivity.class));
+                                    startActivity(new Intent(LoginInActivity.this, HomeActivity.class));
                                     finish();
                                 }
                             } else {

@@ -24,6 +24,7 @@ import com.team.weup.util.NetworkUtil;
 import com.team.weup.util.ReturnVO;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         km = (KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE);
         kl = km.newKeyguardLock("unlock");
 
+
         hideBottomUIMenu();
     }
 
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         current_time.setText(hour+":"+minute);
         current_date.setText(month+"月"+day+"日"+"    "+"星期"+weekStr);
 
-        BaseApplication.addDestroyActivity(this,"mainActivity");
+        WeUpApplication.addDestroyActivity(this,"mainActivity");
         getDBData();
         //设置屏幕上单词的显示
 
@@ -262,8 +264,24 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
         //这句话是用来隐藏锁屏界面的
+        //disabled出问题了
         kl.disableKeyguard();
+
         finish();
+    }
+
+    @Override
+    protected void onPause(){
+        //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        Log.i("TEST","test11");
+        //kl.reenableKeyguard();
     }
 
     //手势滑动解锁,已掌握？

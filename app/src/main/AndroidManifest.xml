@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         android:largeHeap="true"
         tools:targetApi="q">
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".HomeActivity" android:launchMode="singleTask"/>
         <activity android:name=".SettingActivity"
             android:largeHeap="true"/>
         <activity android:name=".MainActivity"
@@ -23,17 +23,14 @@
         <activity android:name=".UpdatePasswordActivity"
             android:launchMode="singleTask"/>
         <activity android:name=".LoginInActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".NullActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".MainActivity">
+        <!--        <activity android:name=".SettingActivity" />-->
+<!--        <activity android:name=".MainActivity">-->
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -41,7 +38,7 @@
 
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
-        </activity>
+<!--        </activity>-->
     </application> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->

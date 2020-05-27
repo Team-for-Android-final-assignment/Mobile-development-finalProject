@@ -1,6 +1,7 @@
 package com.team.weup;
 
 import android.Manifest;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,6 +43,9 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     private SharedPreferences sharedPreferences;
     //屏幕监听
     private ScreenListener screenListener;
+
+    private KeyguardManager km;
+    private KeyguardManager.KeyguardLock kl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
                 Log.i("TEST","test4");
                 editor.putBoolean("tf",true);
                 editor.commit();
-                BaseApplication.destroyActivity("mainActivity");
+                WeUpApplication.destroyActivity("mainActivity");
                 overridePendingTransition(0, 0);
             }
 
@@ -203,6 +208,15 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         if (!tempPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(this, tempPermissions.toArray(new String[0]), 100);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     // 需要重载回调函数：用户对权限申请做出相应操作后执行
