@@ -1,57 +1,81 @@
 package com.team.weup;
 
-import android.annotation.TargetApi;
-import android.content.ContentUris;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
+import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.team.weup.model.User;
 import com.team.weup.repo.UserInterface;
 import com.team.weup.util.NetworkUtil;
 import com.team.weup.util.ReturnVO;
 
-import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Objects;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
-import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
+import static android.content.Context.SENSOR_SERVICE;
 
 public class SportsFragment extends Fragment {
-    // 常量
-    private final int ACTIVITY_CHOOSE_FILE = 100;
-    private final String TAG = "网络请求";
+    private static final String TAG = "网络请求";
+    private TextView stepCountTextView;
+    private TextView targetTodayTextView;
+
+    /** 今日步数 */
+    private int stepCount = 0;
+    private int targetToday = 1000;
+
+    private SensorManager manager = null;
+    private Sensor stepCounterSensor = null;
+
+    private static final String PREFERENCE_NAME = "stepCountRecord";
+    private static final int MODE = MODE_PRIVATE;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sports, container, false);
-        Button uploadButton = view.findViewById(R.id.button_upload);
+        stepCountTextView = view.findViewById(R.id.textView_stepCount);
+        targetTodayTextView = view.findViewById(R.id.textView_targetToday);
+        TextView rankTextView = view.findViewById(R.id.textView_rank);
+        ImageButton rankImageButton = view.findViewById(R.id.imageButton_rank);
 
-        uploadButton.setOnClickListener(this::upload);
+        manager = (SensorManager) Objects.requireNonNull(getContext()).getSystemService(SENSOR_SERVICE);
+        assert manager != null;
+        stepCounterSensor = manager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        targetTodayTextView.setOnClickListener(this::setTargetToday);
+        rankTextView.setOnClickListener(this::gotoRankPage);
+        rankImageButton.setOnClickListener(this::gotoRankPage);
+
+        updateDataInUI();
 
         return view;
     }
+
 
     private void upload(View view) {
         //Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
@@ -62,83 +86,108 @@ public class SportsFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == ACTIVITY_CHOOSE_FILE) {
-            if (resultCode == RESULT_OK) {
-                assert data != null;
-
-                String realPathFromURI = handleImageOnKitKat(data);
-                File file = new File(realPathFromURI);
-                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                MultipartBody.Part bodyFile = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-
-                NetworkUtil.getRetrofit().create(UserInterface.class)
-                        .upload(bodyFile)
-                        .enqueue(new Callback<ReturnVO<String>>() {
-                            @Override
-                            @EverythingIsNonNull
-                            public void onResponse(Call<ReturnVO<String>> call, Response<ReturnVO<String>> response) {
-                                ReturnVO<String> body = response.body();
-                                assert body != null;
-                                if (body.getCode().equals(ReturnVO.OK)) {
-                                    Log.i(TAG, "onResponse: 文件名为" + body.getData());
-                                } else {
-                                    Log.e(TAG, "onResponse: " + body.getMessage(), new Exception("上传文件出错"));
-                                }
-                            }
-
-                            @Override
-                            @EverythingIsNonNull
-                            public void onFailure(Call<ReturnVO<String>> call, Throwable t) {
-                                t.printStackTrace();
-                            }
-                        });
-            }
-        }
+    public void onResume() {
+        super.onResume();
+        manager.registerListener(myListener, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    //取相册照片功能用的函数-获取文件路径   content开头URI --> 文件绝对路径
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private String handleImageOnKitKat(Intent data) {
-        String imagePath = null;
-        Uri uri = data.getData();
-        assert uri != null;
-        Log.d("AddActivityTest", "handleImageOnKitKat  uri=" + uri.toString());
-        if (DocumentsContract.isDocumentUri(getContext(), uri)) {
-            // 如果是document类型的Uri，则通过document id处理
-            String docId = DocumentsContract.getDocumentId(uri);
-            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
-                String id = docId.split(":")[1];
-                String selection = MediaStore.Images.Media._ID + "=" + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-                Toast.makeText(getContext(), "A", Toast.LENGTH_SHORT).show();
-            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.parseLong(docId));
-                imagePath = getImagePath(contentUri, null);
-                Toast.makeText(getContext(), "B", Toast.LENGTH_SHORT).show();
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            //如果是content类型的Uri，则使用普通方式处理
-            imagePath = getImagePath(uri, null);
-            Toast.makeText(getContext(), "C", Toast.LENGTH_SHORT).show();
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            //如果是file类型的Uri，直接获取图片路径即可
-            imagePath = uri.getPath();
-            Toast.makeText(getContext(), "D", Toast.LENGTH_SHORT).show();
-        }
-        Log.d("AddActivityTest", "handleImageOnKitKat  imagePath=" + imagePath);
-        return imagePath;
+    @Override
+    public void onPause() {
+        super.onPause();
+        manager.unregisterListener(myListener);
     }
 
-    private String getImagePath(Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver().query(uri, null, selection, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+    private void updateDataInUI() {
+        stepCountTextView.setText(String.valueOf(stepCount));
+        targetTodayTextView.setText(String.format(Locale.getDefault(), "%s%s", getResources().getString(R.string.今日目标), targetToday));
+    }
+
+    private void setTargetToday(View view) {
+        EditText editText = new EditText(getContext());
+        editText.setText(String.valueOf(targetToday));
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        new AlertDialog.Builder(getContext())
+                .setTitle("设定目标")
+                .setView(editText)
+                .setPositiveButton("确定", (dialog, which) -> {
+                    targetToday = Integer.parseInt(editText.getText().toString().trim());
+                    updateDataInUI();
+                })
+                .create()
+                .show();
+    }
+
+    private final SensorEventListener myListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            int totalStep = ((int) event.values[0]);
+
+            SharedPreferences sharedPreferences = Objects.requireNonNull(getContext()).getSharedPreferences(PREFERENCE_NAME, MODE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            int todayStepRecorded = sharedPreferences.getInt(today(), 0);   // 今日已经记录的步数
+            int milestoneStep = sharedPreferences.getInt("lastRecord", totalStep);
+            if (totalStep < milestoneStep) {    // 如果重启后走了很多步，使得 totalStep > 上次记录，怎么办
+                milestoneStep = totalStep;
+                editor.putInt("lastRecord", milestoneStep);
+                editor.apply();
             }
-            cursor.close();
+            if (0 == todayStepRecorded) {
+                editor.putInt(today(), 1);
+                editor.apply();
+            } else {
+                /*
+                可以记录今天打开APP开始的步数
+                在今天打开了APP之后，如果重启了，步数也不会重置，因为已经记录下了今天的步数
+
+                待测试：第二天中午打开APP，上午的步数可以记录吗，好像可以
+                 */
+                int additionStep = totalStep - milestoneStep;
+                stepCount = todayStepRecorded + additionStep;
+                editor.putInt(today(), stepCount);
+                milestoneStep = totalStep;
+                editor.putInt("lastRecord", milestoneStep);
+                editor.apply();
+            }
+            updateDataInUI();
+
+            long userId = 1L;
+            User updateUser = new User();
+            updateUser.setStepCount(stepCount);
+            NetworkUtil.getRetrofit().create(UserInterface.class)
+                    .updateUser(userId, updateUser)
+                    .enqueue(new Callback<ReturnVO<User>>() {
+                        @Override
+                        @EverythingIsNonNull
+                        public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
+                            ReturnVO<User> body = response.body();
+                            assert body != null;
+                            if (ReturnVO.ERROR.equals(body.getCode())) {
+                                Log.e(TAG, "onResponse: ", new Exception("网络请求异常"));
+                            }
+                        }
+
+                        @Override
+                        @EverythingIsNonNull
+                        public void onFailure(Call<ReturnVO<User>> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
         }
-        return path;
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
+
+    private void gotoRankPage(View view) {
+        Intent intent = new Intent(getContext(), RankActivity.class);
+        startActivity(intent);
+    }
+
+    private String today() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(Calendar.getInstance().getTime());
     }
 }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -16,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +49,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     private KeyguardManager km;
     private KeyguardManager.KeyguardLock kl;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,11 +196,13 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void requestPermissions() {
         // 申请权限：
         String[] neededPermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACTIVITY_RECOGNITION,
         };
         List<String> tempPermissions = new ArrayList<>();
         for (String p : neededPermissions) {
