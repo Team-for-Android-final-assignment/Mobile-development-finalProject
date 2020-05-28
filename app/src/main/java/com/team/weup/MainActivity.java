@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.team.weup.model.User;
 import com.team.weup.model.Word;
+import com.team.weup.model.WordPersonal;
 import com.team.weup.repo.UserInterface;
 import com.team.weup.repo.WordInterface;
 import com.team.weup.util.NetworkUtil;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private int progress=0;
 
     private User currentUser;
+    private Word currentWord;
     private SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor = null;
 
@@ -189,8 +191,20 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                     .enqueue(new Callback<ReturnVO<User>>() {
                         @Override
                         public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
-                            //选对了就解锁
-                            //getInt的第二个参数是不存在这个键时，返回的缺省值
+
+//                            NetworkUtil.getRetrofit().create(WordInterface.class)
+//                                    .addUserWordRecord(new WordPersonal(currentUser,currentWord,0))
+//                                    .enqueue(new Callback<ReturnVO<WordPersonal>>() {
+//                                        @Override
+//                                        public void onResponse(Call<ReturnVO<WordPersonal>> call, Response<ReturnVO<WordPersonal>> response) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onFailure(Call<ReturnVO<WordPersonal>> call, Throwable t) {
+//
+//                                        }
+//                                    });
                             if(count == sharedPreferences.getInt("allNum",2)){
                                 unlock();
                             }
@@ -212,12 +226,23 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             //startActivity(new Intent(MainActivity.this,HomeActivity.class));
         }
         else{
-
             english_word.setTextColor(Color.RED);
             yinbiao.setTextColor(Color.RED);
             btn.setTextColor(Color.RED);
             //这里后续还需要保存错误单词,打错了就要记录一下status=1
-
+//            NetworkUtil.getRetrofit().create(WordInterface.class)
+//                    .addUserWordRecord(new WordPersonal(currentUser,currentWord,1))
+//                    .enqueue(new Callback<ReturnVO<WordPersonal>>() {
+//                        @Override
+//                        public void onResponse(Call<ReturnVO<WordPersonal>> call, Response<ReturnVO<WordPersonal>> response) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<ReturnVO<WordPersonal>> call, Throwable t) {
+//
+//                        }
+//                    });
         }
 
     }
@@ -322,6 +347,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                                         option2.setText("B:"+body.getData().getOption2());
                                         option3.setText("C:"+body.getData().getOption3());
                                         chinese = body.getData().getChinese();
+                                        //currentWord = new Word(body.getData());
                                         Log.i("TEST",chinese);
 
                                     }

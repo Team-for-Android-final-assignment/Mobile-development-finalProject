@@ -12,12 +12,12 @@ import retrofit2.http.Path;
 
 public interface WordInterface {
     //返回的是个人的背单词情况
+    //插入或者更新个人学习情况，0表示答对的单词，1表示答错的单词
     @POST("/userRememberWord")
     Call<ReturnVO<WordPersonal>> addUserWordRecord(@Body WordPersonal wp);
 
     //获取新单词
     @GET("/word/{id}")
     Call <ReturnVO<Word>> getWordById(@Path("id")Long id);
-
 
 }
