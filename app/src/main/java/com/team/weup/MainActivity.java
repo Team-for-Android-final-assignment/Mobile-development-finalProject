@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             }
             //返回新的对象
             NetworkUtil.getRetrofit().create(UserInterface.class)
-                    .updateUser((long)1,currentUser)
+                    .updateUser((long)(Integer.parseInt(SystemStatus.getNow_account())),currentUser)
                     .enqueue(new Callback<ReturnVO<User>>() {
                         @Override
                         public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             english_word.setTextColor(Color.RED);
             yinbiao.setTextColor(Color.RED);
             btn.setTextColor(Color.RED);
-            //这里后续还需要保存错误单词
+            //这里后续还需要保存错误单词,打错了就要记录一下status=1
 
         }
 
@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         english_word.setTextColor(Color.WHITE);
     }
 
+
     //解锁动作函数
     private void unlock(){
         Log.i("TEST","test6");
@@ -265,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         startActivity(intent);
         //这句话是用来隐藏锁屏界面的
         //disabled出问题了
-        kl.disableKeyguard();
+        //kl.disableKeyguard();
 
         finish();
     }
@@ -282,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         super.onDestroy();
         Log.i("TEST","test11");
         //kl.reenableKeyguard();
+        //kl.disableKeyguard();
     }
 
     //手势滑动解锁,已掌握？
@@ -294,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private void getDBData(){
         //从数据库中读取当前的进度
         NetworkUtil.getRetrofit().create(UserInterface.class)
-                .getUserById((long)1)
+                .getUserById((long)Integer.parseInt(SystemStatus.getNow_account()))  //注入当前用户id
                 .enqueue(new Callback<ReturnVO<User>>() {
                     @Override
                     public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {

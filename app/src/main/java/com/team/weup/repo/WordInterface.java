@@ -18,4 +18,6 @@ public interface WordInterface {
     //获取新单词
     @GET("/word/{id}")
     Call <ReturnVO<Word>> getWordById(@Path("id")Long id);
+
+
 }
