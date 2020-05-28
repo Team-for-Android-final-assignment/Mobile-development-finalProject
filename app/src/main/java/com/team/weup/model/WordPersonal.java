@@ -22,6 +22,12 @@ public class WordPersonal {
 
     private Integer wordStatus;
 
+    public WordPersonal(User user,Word word,Integer wordStatus){
+        this.user = user;
+        this.word = word;
+        this.wordStatus = wordStatus;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean equals(Object o) {

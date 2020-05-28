@@ -8,7 +8,7 @@
         android:layout_width="301dp"
         android:layout_height="301dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="150dp">
+        android:layout_marginTop="100dp">
 
         <!--竖分割线-->
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="150dp"
             android:layout_above="@id/horizon"
             android:layout_toLeftOf="@id/vertical"
-            app:cardBackgroundColor="@color/myBlue">
+            app:cardBackgroundColor="@color/qidao_blue">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             android:layout_height="150dp"
             android:layout_above="@id/horizon"
             android:layout_toRightOf="@id/vertical"
-            app:cardBackgroundColor="@color/myYellow">
+            app:cardBackgroundColor="@color/yian_yellow">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_height="150dp"
             android:layout_below="@id/horizon"
             android:layout_toLeftOf="@id/vertical"
-            app:cardBackgroundColor="@color/myYellow">
+            app:cardBackgroundColor="@color/yian_yellow">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -88,6 +88,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="30sp"/>
             <TextView
+                android:id="@+id/difficulty"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="四级英语"
@@ -102,19 +103,20 @@
             android:layout_height="150dp"
             android:layout_below="@id/horizon"
             android:layout_toRightOf="@id/vertical"
-            app:cardBackgroundColor="@color/myBlue">
+            app:cardBackgroundColor="@color/qidao_blue">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="总共学习"
+                android:text="锁屏功能"
                 android:textColor="@android:color/white"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:textSize="30sp"/>
             <TextView
+                android:id="@+id/mode"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="18"
+                android:text="关闭"
                 android:textColor="@android:color/white"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"

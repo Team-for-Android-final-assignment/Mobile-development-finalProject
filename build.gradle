@@ -1,11 +1,16 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
-        google()
-        jcenter()
-        
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        // 私有仓库地址
+        maven { url "https://mvnrepository.com/artifact/com.gcssloop.widget/rclayout/"}
+        maven { url "https://mvnrepository.com/artifact/androidx.cardview/cardview"}
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
@@ -18,9 +23,10 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
-        jcenter()
-        
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
     }
 }
 

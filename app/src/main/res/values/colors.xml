@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimaryDark">@color/qidao_blue</color>
     <color name="colorAccent">#03DAC5</color>
+
     <color name="myYellow">#A08D0F</color>
     <color name="myBlue">#4F4FDF</color>
+
+
+    <color name="qidao_blue">#1E90FF</color>
+    <color name="text_grey">#9D9D9D</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_black">#000000</color>
+    <color name="yian_yellow">#F0DC70</color>
+    <color name="text_red">#EE2C2C</color>
+
+>>>>>>> Stashed changes
 </resources>

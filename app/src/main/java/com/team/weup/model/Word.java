@@ -24,6 +24,16 @@ public class Word {
 
     private String option4;
 
+    public Word(Word word){
+        this.id = word.getId();
+        this.english = word.getEnglish();
+        this.chinese = word.getChinese();
+        this.yinbiao = word.getYinbiao();
+        this.option1 = word.getOption1();
+        this.option2 = word.getOption2();
+        this.option3 = word.getOption3();
+    }
+
     public Long getId() {
         return id;
     }
