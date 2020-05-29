@@ -22,6 +22,10 @@ public class WordPersonal {
 
     private Integer wordStatus;
 
+    public WordPersonal(){
+
+    }
+
     public WordPersonal(User user,Word word,Integer wordStatus){
         this.user = user;
         this.word = word;
