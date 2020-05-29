@@ -76,15 +76,6 @@ public class SportsFragment extends Fragment {
         return view;
     }
 
-
-    private void upload(View view) {
-        //Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-        Intent chooseFile = new Intent(Intent.ACTION_PICK);
-        chooseFile.setType("image/*");
-        Intent intent = Intent.createChooser(chooseFile, "选择图片");
-        startActivityForResult(intent, ACTIVITY_CHOOSE_FILE);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -140,7 +131,9 @@ public class SportsFragment extends Fragment {
                 可以记录今天打开APP开始的步数
                 在今天打开了APP之后，如果重启了，步数也不会重置，因为已经记录下了今天的步数
 
-                待测试：第二天中午打开APP，上午的步数可以记录吗，好像可以
+                第二天中午打开APP，上午的步数可以记录吗，可以
+
+                但不正确的是，每次打开应用会增加上次打开到这次打开的增量步数，不过不要紧
                  */
                 int additionStep = totalStep - milestoneStep;
                 stepCount = todayStepRecorded + additionStep;
@@ -151,7 +144,7 @@ public class SportsFragment extends Fragment {
             }
             updateDataInUI();
 
-            long userId = 1L;
+            long userId = Long.parseLong(SystemStatus.getNow_account());
             User updateUser = new User();
             updateUser.setStepCount(stepCount);
             NetworkUtil.getRetrofit().create(UserInterface.class)
