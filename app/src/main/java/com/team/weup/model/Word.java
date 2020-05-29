@@ -24,6 +24,10 @@ public class Word {
 
     private String option4;
 
+    public Word(){
+
+    }
+
     public Word(Word word){
         this.id = word.getId();
         this.english = word.getEnglish();
