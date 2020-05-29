@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.team.weup">
 
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" /> <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 记步传感器 -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+  
     <application
         android:name=".WeUpApplication"
         android:allowBackup="false"
@@ -15,6 +22,7 @@
         android:theme="@style/AppTheme"
         android:largeHeap="true"
         tools:targetApi="q">
+        <activity android:name=".RankActivity" />
         <activity android:name=".HomeActivity" android:launchMode="singleTask"/>
         <activity android:name=".SettingActivity"
             android:largeHeap="true"/>
@@ -39,12 +47,6 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
 <!--        </activity>-->
-    </application> <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-
+    </application>
+      
 </manifest>

@@ -3,6 +3,8 @@ package com.team.weup.repo;
 import com.team.weup.model.User;
 import com.team.weup.util.ReturnVO;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,4 +33,8 @@ public interface UserInterface {
 
     @GET("/user/{id}")
     Call<ReturnVO<User>> getUserById(@Path("id") Long id);
+
+    @GET("users/getTopStepCountList")
+    Call<ReturnVO<List<User>>> getTopListByStepCount();
+
 }

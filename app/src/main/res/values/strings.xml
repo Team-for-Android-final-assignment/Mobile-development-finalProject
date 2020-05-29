@@ -2,8 +2,6 @@
     <string name="app_name">We Up</string>
 
     <string name="上传图片">上传图片</string>
-
-
     <string name="account">学号</string>
     <string name="password">密码</string>
     <string name="login_in">登&#8194;&#8194;录</string>
@@ -25,6 +23,7 @@
     <string name="new_password">请输入新密码</string>
     <string name="con_password">再次确认新密码</string>
     <string name="confirm">确&#8194;&#8194;定</string>
-
-
+    <string name="今日步数">今日步数</string>
+    <string name="今日目标">今日目标：</string>
+    <string name="排行榜">排行榜</string>
 </resources>
