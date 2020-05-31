@@ -40,6 +40,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="30sp"/>
             <TextView
+                android:id="@+id/wrongNum"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="8"
@@ -64,6 +65,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="30sp"/>
             <TextView
+                android:id="@+id/correctNum"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="40"
@@ -151,6 +153,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/wrongBook"
             android:layout_width="150dp"
             android:layout_height="30dp"
             app:cardBackgroundColor="@android:color/holo_red_dark"
@@ -171,6 +174,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/noteBook"
             android:layout_width="150dp"
             android:layout_height="30dp"
             app:cardBackgroundColor="@android:color/holo_orange_dark"
