@@ -12,8 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -77,7 +74,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
                     Log.i("TEST","test2");
                     if(sharedPreferences.getBoolean("tf",false)){
                         Log.i("TEST","test3");
-                        startActivity(new Intent(HomeActivity.this,MainActivity.class));
+                        startActivity(new Intent(HomeActivity.this, WordActivity.class));
                         overridePendingTransition(0, 0);
                     }
                 }

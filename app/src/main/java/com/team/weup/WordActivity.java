@@ -25,13 +25,12 @@ import com.team.weup.util.NetworkUtil;
 import com.team.weup.util.ReturnVO;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
+public class WordActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
     //月、日、星期
     private String month;
     private String day;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_word);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -192,19 +191,19 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                         @Override
                         public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
 
-//                            NetworkUtil.getRetrofit().create(WordInterface.class)
-//                                    .addUserWordRecord(new WordPersonal(currentUser,currentWord,0))
-//                                    .enqueue(new Callback<ReturnVO<WordPersonal>>() {
-//                                        @Override
-//                                        public void onResponse(Call<ReturnVO<WordPersonal>> call, Response<ReturnVO<WordPersonal>> response) {
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onFailure(Call<ReturnVO<WordPersonal>> call, Throwable t) {
-//
-//                                        }
-//                                    });
+                            NetworkUtil.getRetrofit().create(WordInterface.class)
+                                    .addUserWordRecord(new WordPersonal(currentUser,currentWord,0))
+                                    .enqueue(new Callback<ReturnVO<WordPersonal>>() {
+                                        @Override
+                                        public void onResponse(Call<ReturnVO<WordPersonal>> call, Response<ReturnVO<WordPersonal>> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ReturnVO<WordPersonal>> call, Throwable t) {
+
+                                        }
+                                    });
                             if(count == sharedPreferences.getInt("allNum",2)){
                                 unlock();
                             }
@@ -229,20 +228,36 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             english_word.setTextColor(Color.RED);
             yinbiao.setTextColor(Color.RED);
             btn.setTextColor(Color.RED);
+            progress++;
+            currentUser.setProgress(progress);
             //这里后续还需要保存错误单词,打错了就要记录一下status=1
-//            NetworkUtil.getRetrofit().create(WordInterface.class)
-//                    .addUserWordRecord(new WordPersonal(currentUser,currentWord,1))
-//                    .enqueue(new Callback<ReturnVO<WordPersonal>>() {
-//                        @Override
-//                        public void onResponse(Call<ReturnVO<WordPersonal>> call, Response<ReturnVO<WordPersonal>> response) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<ReturnVO<WordPersonal>> call, Throwable t) {
-//
-//                        }
-//                    });
+            NetworkUtil.getRetrofit().create(UserInterface.class)
+                    .updateUser((long)(Integer.parseInt(SystemStatus.getNow_account())),currentUser)
+                    .enqueue(new Callback<ReturnVO<User>>() {
+                        @Override
+                        public void onResponse(Call<ReturnVO<User>> call, Response<ReturnVO<User>> response) {
+                            NetworkUtil.getRetrofit().create(WordInterface.class)
+                                    .addUserWordRecord(new WordPersonal(currentUser,currentWord,1))
+                                    .enqueue(new Callback<ReturnVO<WordPersonal>>() {
+                                        @Override
+                                        public void onResponse(Call<ReturnVO<WordPersonal>> call, Response<ReturnVO<WordPersonal>> response) {
+                                            //渲染下一个单词
+                                            getDBData();
+                                            setWordColor();
+                                            //需要更新user
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ReturnVO<WordPersonal>> call, Throwable t) {
+
+                                        }
+                                    });
+                        }
+                        @Override
+                        public void onFailure(Call<ReturnVO<User>> call, Throwable t) {
+
+                        }
+                    });
         }
 
     }
@@ -347,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                                         option2.setText("B:"+body.getData().getOption2());
                                         option3.setText("C:"+body.getData().getOption3());
                                         chinese = body.getData().getChinese();
-                                        //currentWord = new Word(body.getData());
+                                        currentWord = new Word(body.getData());
                                         Log.i("TEST",chinese);
 
                                     }
@@ -377,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
         decorView.setSystemUiVisibility(uiOption);
 
-        // This code will always hide the navigation bar
+        // 隐藏底部导航栏
         decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener(){
             @Override
             public void  onSystemUiVisibilityChange(int visibility)

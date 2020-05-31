@@ -3,50 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.team.weup">
 
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" /> <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 记步传感器 -->
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-  
     <application
         android:name=".WeUpApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:largeHeap="true"
         tools:targetApi="q">
+        <activity android:name=".WrongActivity"></activity>
         <activity android:name=".RankActivity" />
-        <activity android:name=".HomeActivity" android:launchMode="singleTask"/>
-        <activity android:name=".SettingActivity"
-            android:largeHeap="true"/>
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".UpdatePasswordActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".LoginInActivity"
+        <activity
+            android:name=".HomeActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".SettingActivity"
+            android:largeHeap="true" />
+        <activity
+            android:name=".WordActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".UpdatePasswordActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".LoginInActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--        <activity android:name=".SettingActivity" />-->
-<!--        <activity android:name=".MainActivity">-->
+    </application> <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 记步传感器 -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-<!--        </activity>-->
-    </application>
-      
 </manifest>

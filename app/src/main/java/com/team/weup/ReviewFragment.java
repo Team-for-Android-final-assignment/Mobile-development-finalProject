@@ -15,7 +15,19 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.team.weup.model.WordPersonal;
+import com.team.weup.repo.WordInterface;
+import com.team.weup.util.NetworkUtil;
+import com.team.weup.util.ReturnVO;
+
 import org.w3c.dom.Text;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ReviewFragment extends Fragment {
@@ -33,9 +45,21 @@ public class ReviewFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    //锁屏设置按钮
     private CardView setting;
+    //错题本按钮
+    private CardView wrongBook;
+    //笔记本按钮
+    private CardView noteBook;
+
     private TextView mode;
     private TextView difficulty;
+
+    private TextView wrongNum;
+    private TextView correctNum;
+
+
+    public static Set<WordPersonal> wordPersonal;
 
     public ReviewFragment() {
         // Required empty public constructor
@@ -66,9 +90,6 @@ public class ReviewFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("share",Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction(SettingActivity.action);
-//        getActivity().registerReceiver(broadcastReceiver,filter);
 
         mode=(TextView)view.findViewById(R.id.mode);
         difficulty = (TextView)view.findViewById(R.id.difficulty);
@@ -80,7 +101,18 @@ public class ReviewFragment extends Fragment {
                 startActivity(new Intent(getActivity(),SettingActivity.class));
             }
         });
-        mode.setText(sharedPreferences.getString("mode","关闭"));
+
+        wrongBook = (CardView)view.findViewById(R.id.wrongBook);
+        wrongBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),WrongActivity.class));
+            }
+        });
+
+        wrongNum = (TextView)view.findViewById(R.id.wrongNum);
+        correctNum = (TextView)view.findViewById(R.id.correctNum);
+        //mode.setText(sharedPreferences.getString("mode","关闭"));
         //setStudyData();
 
         return view;
@@ -118,7 +150,6 @@ public class ReviewFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        difficulty.setText(sharedPreferences.getString("difficulty","四级")+"英语");
         setStudyData();
     }
 
@@ -142,6 +173,40 @@ public class ReviewFragment extends Fragment {
 
     //此处编写显示数据的逻辑,还有难度和开关模式
     private void setStudyData(){
+        difficulty.setText(sharedPreferences.getString("difficulty","四级")+"英语");
         mode.setText(sharedPreferences.getString("mode","关闭"));
+        //读取wordPersonal数据中，wordstatus=0和1的条目数，并根据单词的id获取单词，把单词写到本地
+        NetworkUtil.getRetrofit().create(WordInterface.class)
+                .getWordPersonalSetByUserId((long)Integer.parseInt(SystemStatus.getNow_account()))
+                .enqueue(new Callback<ReturnVO<Set<WordPersonal>>>() {
+                    @Override
+                    public void onResponse(Call<ReturnVO<Set<WordPersonal>>> call, Response<ReturnVO<Set<WordPersonal>>> response) {
+                        int wrongcount=0;
+                        int correctcount=0;
+                        ReturnVO<Set<WordPersonal>> body = response.body();
+                        wordPersonal = body.getData();
+                        if(body.getData()!=null){
+                            for(WordPersonal w:wordPersonal){
+                                if(w.getWordStatus()==1){
+                                    wrongcount++;
+                                }
+                                else{
+                                    correctcount++;
+                                }
+                            }
+                            wrongNum.setText(String.valueOf(wrongcount));
+                            correctNum.setText(String.valueOf(correctcount));
+                        }
+                        else{
+                            wrongNum.setText(String.valueOf(0));
+                            correctNum.setText(String.valueOf(0));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReturnVO<Set<WordPersonal>>> call, Throwable t) {
+
+                    }
+                });
     }
 }
