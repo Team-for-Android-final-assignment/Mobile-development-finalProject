@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,7 +26,7 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener,ReviewFragment.OnFragmentInteractionListener{
+public class HomeActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener, ReviewFragment.OnFragmentInteractionListener {
 
     private ViewPager mViewPager;
     //private RadioGroup mTabRadioGroup;
@@ -46,7 +45,6 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     private KeyguardManager km;
     private KeyguardManager.KeyguardLock kl;
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         init();
     }
 
-    private void init(){
+    private void init() {
         //初始化share数据库
         sharedPreferences = getSharedPreferences("share", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -68,12 +66,12 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
             @Override
             public void onScreenOn() {//手机点亮屏幕时的动作
                 //如果打开了开关
-                Log.i("TEST","test1");
-                if(sharedPreferences.getBoolean("btnTf",false)){
+                Log.i("TEST", "test1");
+                if (sharedPreferences.getBoolean("btnTf", false)) {
                     //如果屏幕解锁
-                    Log.i("TEST","test2");
-                    if(sharedPreferences.getBoolean("tf",false)){
-                        Log.i("TEST","test3");
+                    Log.i("TEST", "test2");
+                    if (sharedPreferences.getBoolean("tf", false)) {
+                        Log.i("TEST", "test3");
                         startActivity(new Intent(HomeActivity.this, WordActivity.class));
                         overridePendingTransition(0, 0);
                     }
@@ -82,8 +80,8 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
             @Override
             public void onScreenOff() {//手机已锁屏时的操作
-                Log.i("TEST","test4");
-                editor.putBoolean("tf",true);
+                Log.i("TEST", "test4");
+                editor.putBoolean("tf", true);
                 editor.commit();
                 WeUpApplication.destroyActivity("mainActivity");
                 overridePendingTransition(0, 0);
@@ -91,21 +89,21 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
             @Override
             public void onUserPresent() {//手机已解锁时的操作
-                Log.i("TEST","test5");
-                editor.putBoolean("tf",false);
+                Log.i("TEST", "test5");
+                editor.putBoolean("tf", false);
                 editor.commit();
             }
         });
     }
 
-    private void initView(){
-        mViewPager = (ViewPager)findViewById(R.id.fragment_vp);
+    private void initView() {
+        mViewPager = (ViewPager) findViewById(R.id.fragment_vp);
         //mTabRadioGroup = (RadioGroup) findViewById(R.id.tabs_rg);
         reviewFragment = new ReviewFragment();
         // init fragment
         //将这里的fragment修改成你自己的页面
         mFragments = new ArrayList<>(4);
-        mFragments.add(BlankFragment.newInstance("生活",""));
+        mFragments.add(BlankFragment.newInstance("生活", ""));
         mFragments.add(reviewFragment);
         mFragments.add(new SportsFragment());
         mFragments.add(new IFragment());
@@ -121,15 +119,15 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         //screenListener.unregisterListener();
-        Log.i("TEST","test7");
+        Log.i("TEST", "test7");
         screenListener.unregisterListener();
         mViewPager.removeOnPageChangeListener(mPageChangeListener);
     }
 
-    private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener(){
+    private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageScrolled(int i, float v, int i1) {
@@ -152,7 +150,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     };
 
     // 变更vpViewPager显示内容
-    public void changePager(int i){
+    public void changePager(int i) {
         mViewPager.setCurrentItem(i);
     }
 
@@ -172,6 +170,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> mList;
+
         public MyFragmentPagerAdapter(FragmentManager fm, List<Fragment> list) {
             super(fm);
             this.mList = list;
@@ -189,18 +188,19 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri){
+    public void onFragmentInteraction(Uri uri) {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void requestPermissions() {
         // 申请权限：
-        String[] neededPermissions = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACTIVITY_RECOGNITION,
-        };
+        List<String> neededPermissions = new ArrayList<String>() {{
+            add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            neededPermissions.add(Manifest.permission.ACTIVITY_RECOGNITION);
+        }
         List<String> tempPermissions = new ArrayList<>();
         for (String p : neededPermissions) {
             if (ContextCompat.checkSelfPermission(this, p) != PackageManager.PERMISSION_GRANTED) {
@@ -214,7 +214,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             moveTaskToBack(true);
             return true;
         }
