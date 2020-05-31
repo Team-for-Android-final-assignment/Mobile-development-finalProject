@@ -110,6 +110,14 @@ public class ReviewFragment extends Fragment {
             }
         });
 
+        noteBook = (CardView)view.findViewById(R.id.noteBook);
+        noteBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),MainActivity.class));
+            }
+        });
+
         wrongNum = (TextView)view.findViewById(R.id.wrongNum);
         correctNum = (TextView)view.findViewById(R.id.correctNum);
         //mode.setText(sharedPreferences.getString("mode","关闭"));

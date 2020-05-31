@@ -5,7 +5,7 @@
 
     <application
         android:name=".WeUpApplication"
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -38,6 +38,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".AddActivity"
+            android:theme="@style/NoteTheme"
+            android:exported="true"
+            android:windowSoftInputMode="stateHidden"></activity>
+        <activity android:name=".ShowRecord"></activity>
+        <activity android:name=".PaintActivity"></activity>
+        <activity android:name=".ActivityRecord"></activity>
+        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".DataSearchActivity"></activity>
+        <activity
+            android:name=".MainActivity">
+        </activity>
     </application> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->
@@ -47,4 +61,13 @@
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 </manifest>
