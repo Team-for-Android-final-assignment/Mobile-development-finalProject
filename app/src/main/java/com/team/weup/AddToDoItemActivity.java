@@ -97,8 +97,10 @@ public class AddToDoItemActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+        //有意思的bug2：要放在setOnClickListenser后面，否则会出现进入新建待办事项页面时，默认不提醒，而提醒时间部件可以点的情况。
         ddl_remind.setOnClickListener(this);
-        ddl_remind.setClickable(false);//有意思的bug2：要放在setOnClickListenser后面，否则会出现进入新建待办事项页面时，默认不提醒，而提醒时间部件可以点。
+        ddl_remind.setClickable(false);
+
         //设置是否提醒。若提醒，提醒日期可以设置；若不提醒，提醒日期不可设置
         alert_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -168,7 +168,7 @@ public class LifeFragment extends Fragment implements View.OnClickListener{
                             }
                             Log.i("列表刷新","生成list");
 
-                            //有意思的bug1：访问服务器完成之前，就进行了ListView加载list数据的操作，导致列表刷新的时候为空
+                            //bug1：将加载list数据的代码放在http请求代码后面，请求数据完成之前，就进行了ListView加载list数据的操作，导致列表刷新的时候为空，所以需要将加载数据的代码加在http请求的回调函数中
                             //ListView加载list数据
                             ListAdapter listAdapter = new SimpleAdapter(getContext(), list,
                                     R.layout.item, new String[]{"id", "content","year","month","day","time", "minute", "completion_status"},
@@ -182,8 +182,8 @@ public class LifeFragment extends Fragment implements View.OnClickListener{
                     public void onFailure(Call<ReturnVO<List<TodoItem>>> call, Throwable t) {
                     }
                 });
-
     }
+
 
     @Override
     public void onResume(){
