@@ -103,7 +103,7 @@ public class HomeActivity extends AppCompatActivity implements BlankFragment.OnF
         // init fragment
         //将这里的fragment修改成你自己的页面
         mFragments = new ArrayList<>(4);
-        mFragments.add(BlankFragment.newInstance("生活", ""));
+        mFragments.add(new LifeFragment());
         mFragments.add(reviewFragment);
         mFragments.add(new SportsFragment());
         mFragments.add(new IFragment());

@@ -52,6 +52,9 @@
         <activity
             android:name=".MainActivity">
         </activity>
+
+        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".AddToDoItemActivity"></activity>
     </application> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- GSM网络权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读写权限 -->
