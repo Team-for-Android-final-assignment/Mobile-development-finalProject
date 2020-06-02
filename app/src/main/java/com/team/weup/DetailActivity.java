@@ -39,7 +39,7 @@ import retrofit2.Response;
  */
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener, AddTimeDialog.Message {
-    private static final String TAG = "测试";
+    private static final String TAG = "待办事项详情";
 
     private Button back;
     private Button save;
@@ -52,7 +52,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private Spinner completion_status_spinner;
     private int completion_status;
     private Switch alert_switch;
-    private boolean alert = true;
+    private boolean alert;
     private LinearLayout ddl_remind;
     private TextView year_remind, month_remind, day_remind, time_remind, minute_remind;
     private EditText content;
@@ -112,7 +112,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                                     time.setText(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
                                     minute.setText(String.valueOf(calendar.get(Calendar.MINUTE)));
                                     completion_status_spinner.setSelection(data.get(i).getItemStatus() - 1);
+                                    //completion_status = data.get(i).getItemStatus();//setSelection调用后，onItemSelected就会被调用
                                     alert_switch.setChecked(data.get(i).getAlert());
+                                    alert = data.get(i).getAlert();
+                                    ddl_remind.setClickable(alert);//根据获得的alert设置提醒日期是否可设置
                                     content.setText(data.get(i).getContent());
                                     break;
                                 }
@@ -154,6 +157,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 completion_status = position + 1;
+                Log.i(TAG, ""+completion_status);
+                Log.i(TAG, "onItemSelected");
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -165,11 +170,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     alert = true;
-                    currentItem.setAlert(true);
+                    //currentItem.setAlert(true);
                     ddl_remind.setClickable(true);
                 } else {
                     alert = false;
-                    currentItem.setAlert(false);
+                    //currentItem.setAlert(false);
                     ddl_remind.setClickable(false);
                 }
             }
@@ -187,7 +192,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                         || TextUtils.isEmpty(year.getText()) || TextUtils.isEmpty(month.getText())
                         || TextUtils.isEmpty(day.getText()) || TextUtils.isEmpty(time.getText())) {
                     Toast.makeText(this, "截止日期或待办事项内容不能为空", Toast.LENGTH_SHORT).show();
-                } else if (currentItem.getAlert() == true) {
+                } else if (alert == true) {
                     if (TextUtils.isEmpty(year_remind.getText()) || TextUtils.isEmpty(month_remind.getText())
                             || TextUtils.isEmpty(day_remind.getText()) || TextUtils.isEmpty(time_remind.getText())) {
                         Toast.makeText(this, "提醒日期不能为空", Toast.LENGTH_SHORT).show();
@@ -240,7 +245,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                                         });
                                 finish();
                             }else{
-                                Toast.makeText(this, "提醒日期不合法，请重输", Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, "提醒日期应该大于当前系统时间，请重输", Toast.LENGTH_LONG).show();
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -257,7 +262,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     currentItem.setDdl(Timestamp.valueOf(ddl_str));
                     currentItem.setItemStatus(completion_status);
                     currentItem.setAlert(alert);
-
                     currentItem.setContent(content.getText().toString().trim());
                     NetworkUtil.getRetrofit().create(TodoItemInterface.class)
                             .updateTodoItemById((long) note_id, currentItem)
