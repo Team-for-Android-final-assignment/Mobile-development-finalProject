@@ -42,9 +42,9 @@ public class AddToDoItemActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout ddl; //截止日期布局
     private TextView year, month, day, time, minute;//年月日时分
     private Spinner completion_status_spinner;//完成状态spinner
-    private int completion_status;//完成状态
+    private int completion_status = 1;//默认未完成状态
     private Switch alert_switch;//是否提醒switch
-    private boolean alert = true;//是否提醒
+    private boolean alert = false;//默认不提醒
     private LinearLayout ddl_remind;//提醒日期布局
     private TextView year_remind, month_remind, day_remind, time_remind, minute_remind;
     private EditText content;//待办内容
@@ -78,6 +78,8 @@ public class AddToDoItemActivity extends AppCompatActivity implements View.OnCli
         time_remind = (TextView) findViewById(R.id.ddl_time_remind);
         minute_remind = (TextView) findViewById(R.id.ddl_minute_remind);
         content = (EditText) findViewById(R.id.content_add);
+
+
 
         //设置监视事件
         finish.setOnClickListener(this);
@@ -173,7 +175,7 @@ public class AddToDoItemActivity extends AppCompatActivity implements View.OnCli
                                         });
                                 finish();
                             }else{
-                                Toast.makeText(this, "提醒日期不合法，请重输", Toast.LENGTH_LONG).show();
+                                Toast.makeText(this, "提醒日期应该大于当前系统时间，请重输", Toast.LENGTH_LONG).show();
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
